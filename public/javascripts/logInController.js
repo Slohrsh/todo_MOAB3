@@ -7,6 +7,11 @@
 'use strict';
 var todoApp = angular.module("todo", ['ngMaterial']);
 
-todoApp.controller("logInController", ['$scope', function ($scope) {
-
+todoApp.controller("logInController", ['$scope', '$http', '$location', function ($scope, $http, $location) {
+    //login Abfragen
+    $scope.verifyCredentials = function(){
+        /*$scope.user.passwd;
+        $scope.user.name;*/
+        $location.path("todoUI"); // path not hash
+    }
 }]);
