@@ -14,7 +14,7 @@
     <span flex></span>
   </div>
 </md-toolbar>
-<md-content md-theme="docs-dark" layout-gt-sm="row" layout-padding>
+<md-content layout-gt-sm="row" layout-padding>
   <div>
     <md-input-container>
       <label>Username</label>
@@ -28,7 +28,7 @@
   </div>
 </md-content>
 
-<md-button class="md-raised md-primary">LogIn</md-button>
+<md-button class="md-raised md-primary" ng-click="verifyCredentials()">LogIn</md-button>
 
 <!-- Angular Material requires Angular.js Libraries -->
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
