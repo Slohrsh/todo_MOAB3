@@ -1,0 +1,112 @@
+<html lang="en" >
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Angular Material style sheet -->
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+</head>
+<body ng-app="BlankApp" ng-cloak>
+
+<md-toolbar class="md-hue-2">
+    <div class="md-toolbar-tools">
+        <md-button class="md-icon-button" aria-label="Settings" ng-disabled="true">
+            <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+        </md-button>
+        <h2>
+            <span>API Documentation</span>
+        </h2>
+        <span flex></span>
+        <md-button class="md-icon-button" aria-label="Favorite">
+            <md-icon md-svg-icon="img/icons/favorite.svg" style="color: greenyellow;"></md-icon>
+        </md-button>
+        <md-button class="md-icon-button" aria-label="More">
+            <md-icon md-svg-icon="img/icons/more_vert.svg"></md-icon>
+        </md-button>
+    </div>
+</md-toolbar>
+<md-content flex layout-padding>
+    <md-list>
+        <h1 class="md-title">General</h1>
+        <p>You can get your Information when you put the command directly in the URL</p>
+    </md-list>
+    <md-divider ng-if="!$last"></md-divider>
+    <md-list>
+        <h2 class="md-title">allTodosFromUser</h2>
+        <p>Get all Todos which are referenced to the User</p>
+        <p>Method: GET</p>
+        <p>Params: none</p>
+    </md-list>
+    <md-divider ng-if="!$last"></md-divider>
+    <md-list>
+        <h2 class="md-title">newSpecificTodo</h2>
+        <p>Create a new Task</p>
+        <p>Method: POST</p>
+        <p>Params:
+            <p>userid: ID from the actual user</p>
+            <p>topic: Topic fo the Task</p>
+            <p>description: Description of the Task</p>
+            <p>isDone: Set the Taks to done</p>
+        </p>
+    </md-list>
+    <md-divider ng-if="!$last"></md-divider>
+    <md-list>
+        <h2 class="md-title">getSpecificTodo</h2>
+        <p>Get a specific Todo</p>
+        <p>Method: GET</p>
+        <p>Params:
+            <p>id: The ID from the Todo</p>
+        </p>
+    </md-list>
+    <md-divider ng-if="!$last"></md-divider>
+    <md-list>
+        <h2 class="md-title">General</h2>
+    </md-list>
+    <md-divider ng-if="!$last"></md-divider>
+    <md-list>
+        <h2 class="md-title">General</h2>
+    </md-list>
+    <md-divider ng-if="!$last"></md-divider>
+    <md-list>
+        <h2 class="md-title">General</h2>
+    </md-list>
+    <md-divider ng-if="!$last"></md-divider>
+    <md-list>
+        <h2 class="md-title">General</h2>
+    </md-list>
+    <md-divider ng-if="!$last"></md-divider>
+    <md-list>
+        <h2 class="md-title">General</h2>
+    </md-list>
+    <md-divider ng-if="!$last"></md-divider>
+    <md-list>
+        <h2 class="md-title">General</h2>
+    </md-list>
+    <md-divider ng-if="!$last"></md-divider>
+    <md-list>
+        <h2 class="md-title">General</h2>
+    </md-list>
+</md-content>
+
+<!-- Angular Material requires Angular.js Libraries -->
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+<!-- Angular Material Library -->
+<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+
+<!-- Your application bootstrap  -->
+<script type="text/javascript">
+    /**
+     * You must include the dependency on 'ngMaterial'
+     */
+    angular.module('BlankApp', ['ngMaterial']);
+</script>
+
+</body>
+</html>
+
+<!--
+Copyright 2016 Google Inc. All Rights Reserved.
+Use of this source code is governed by an MIT-style license that can be in foundin the LICENSE file at http://material.angularjs.org/license.
+-->
