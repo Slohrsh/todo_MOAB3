@@ -59,10 +59,10 @@ router.get('/allTodosFromUser', function (req, res, next) {
 });
 
 router.post('/newSpecificTodo', function (req, res, next) {
-    var userID = req.headers.userid; // Todo irgendwie nach authentifizierung gönnen
-    var description = req.headers.description;
-    var topic = req.headers.topic;
-    var isDone = req.headers.isdone;
+    var userID = req.body.userid; // Todo irgendwie nach authentifizierung gönnen
+    var description = req.body.description;
+    var topic = req.body.topic;
+    var isDone = req.body.isdone;
     //Todo was gegen SQL-Injection machen!!!
     connection.query("INSERT INTO todos (user, description, topic, isDone) VALUES " +
         "("+ userID + ", '" + description + "', '" + topic + "', " + isDone + ")", function (err, rows) {
@@ -143,9 +143,9 @@ router.delete('/deleteSpecificTodo', function (req, res, next) {
 });
 
 router.post('/newTask', function (req, res, next) {
-    var idtodo = req.headers.idtodo;
-    var task = req.headers.task;
-    var isDone = req.headers.isdone;
+    var idtodo = req.body.idtodo;
+    var task = req.body.task;
+    var isDone = req.body.isdone;
     //Todo was gegen SQL-Injection machen!!!
     connection.query("INSERT INTO todo_tasks (todo, task, isDone) VALUES"+
         "("+ idtodo + ", '" + task + "', " + isDone + ")", function (err, rows) {
@@ -190,10 +190,10 @@ router.put('/updateTask', function (req, res, next) {
     });
 });
 
-router.delete('/deleteSpecificTask', function (req, res, next) {
-    var user = req.headers.user; //ToDo userID vom login holen
-    var idtodo_tasks = req.headers.idtodo_tasks;//Todo Aus Kontext beschaffen
-    var idtodos = req.headers.idtodos;
+router.put('/deleteSpecificTask', function (req, res, next) {
+    var user = req.body.user; //ToDo userID vom login holen
+    var idtodo_tasks = req.body.idtodo_tasks;//Todo Aus Kontext beschaffen
+    var idtodos = req.body.idtodos;
     connection.query("DELETE FROM todo_tasks " +
         "WHERE idtodo_tasks = " + idtodo_tasks + " " +
         "AND (SELECT COUNT(idtodos) " +

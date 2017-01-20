@@ -15,4 +15,8 @@ todoApp.controller("todoController", ['exchangeTodoID', '$scope', '$http', '$win
         exchangeTodoID.set([{id:id}]);
         $window.location = "taskUI";
     }
+
+    $scope.addNewTodo = function(){
+        $window.location = "newTodo";
+    }
 }]);

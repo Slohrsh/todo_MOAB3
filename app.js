@@ -9,6 +9,9 @@ var index = require('./routes/index');
 var todoAPI = require('./routes/todoAPI');
 var todoUI = require('./routes/todoUI');
 var taskUI = require('./routes/taskUI');
+var newTodo = require('./routes/newTodo');
+var newTask = require('./routes/newTask');
+var editTask = require('./routes/editTask');
 
 var app = express();
 
@@ -28,6 +31,9 @@ app.use('/', index);
 app.use('/todoAPI', todoAPI);
 app.use('/todoUI', todoUI);
 app.use('/taskUI', taskUI);
+app.use('/newTodo', newTodo);
+app.use('/newTask', newTask);
+app.use('/editTask', editTask);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,7 +1,7 @@
 'use strict';
 var todoApp = angular.module("todo", ['ngMaterial']);
 
-todoApp.controller("taskController", ['exchangeTodoID', '$scope', '$http', '$location', function (exchangeTodoID, $scope, $http, $location) {
+todoApp.controller("taskController", ['exchangeTodoID', '$scope', '$http', '$window', function (exchangeTodoID, $scope, $http, $window) {
     var id = 1; //exchangeTodoID.get();
 
     $http({
@@ -42,5 +42,17 @@ todoApp.controller("taskController", ['exchangeTodoID', '$scope', '$http', '$loc
 
     $scope.updateTasks = function (newTask) {
         $scope.tasks[newTask.idtodo_tasks-1] = newTask;
+    }
+
+    $scope.addNewTask = function(){
+        $window.location = "newTask";
+    }
+
+    $scope.editTask = function(){
+        $window.location = "editTask";
+    }
+
+    $scope.deleteTodo = function(){
+        //Todo: Todo und alle tasks die dazugehören löschen
     }
 }]);
