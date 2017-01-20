@@ -21,6 +21,30 @@ router.get('/', function(req, res, next) {
     res.render('API_documentation');
 });
 
+router.post('/userAuthentification', function(req, res, next){
+    var user = req.body.user;
+    var idtodos = req.body.password;
+
+    var query =
+        "SELECT Count(*) AS Result" +
+        "FROM todo.user " +
+        "WHERE username = 'Slohrsh' " +
+        "AND password = 'passwordt'";
+
+    connection.query(query, function (err, rows) {
+        if (err) {
+            res.send(err.message);
+        } else {
+            isCorrect = rows.Result;
+            if(isCorrect == 1){
+                res.send("Correct Credentials");
+            }else{
+                res.send("Incorrect Credentials");
+            }
+        }
+    });
+});
+
 router.get('/allTodosFromUser', function (req, res, next) {
     //ToDo userID vom login holen
     connection.query("SELECT idtodos, topic, description, isDone " +
@@ -53,7 +77,7 @@ router.post('/newSpecificTodo', function (req, res, next) {
 router.get('/getSpecificTodo/:idtodo', function (req, res, next) {
     //ToDo userID vom login holen
     var idtodo = req.params.idtodo;
-    connection.query("SELECT todos.topic, todos.description, todo_tasks.task, todo_tasks.isDone " +
+    connection.query("SELECT todos.topic, todos.description, todo_tasks.task, todo_tasks.isDone, todo_tasks.idtodo_tasks " +
         "FROM todos , todo_tasks " +
         "WHERE todos.idtodos=todo_tasks.todo " +
         "AND todos.user = 1 " +
@@ -134,11 +158,11 @@ router.post('/newTask', function (req, res, next) {
 });
 
 router.put('/updateTask', function (req, res, next) {
-    var user = req.headers.user; // Todo irgendwie nach authentifizierung gönnen
-    var idtodos = req.headers.idtodos;
-    var idtodo_tasks = req.headers.idtodo_tasks;
-    var task = req.headers.task;
-    var isDone = req.headers.isdone;
+    var user = req.body.user; // Todo irgendwie nach authentifizierung gönnen
+    var idtodos = req.body.idtodos;
+    var idtodo_tasks = req.body.idtodo_tasks;
+    var task = req.body.task;
+    var isDone = req.body.isdone;
 
 
     var updateQuery = "UPDATE todo_tasks SET ";
