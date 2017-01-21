@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 
 var mysql = require('mysql');
-var exchangeUserID = require('exchangeUserID');
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'user_db',
