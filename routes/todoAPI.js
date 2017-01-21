@@ -23,19 +23,19 @@ router.get('/', function(req, res, next) {
 
 router.post('/userAuthentification', function(req, res, next){
     var user = req.body.user;
-    var idtodos = req.body.password;
+    var password = req.body.password;
 
     var query =
-        "SELECT Count(*) AS Result" +
-        "FROM todo.user " +
-        "WHERE username = 'Slohrsh' " +
-        "AND password = 'passwordt'";
+        "SELECT Count(*) AS Result " +
+        "FROM user " +
+        "WHERE username = '" + user + "' " +
+        "AND password = '" + password + "'";
 
     connection.query(query, function (err, rows) {
         if (err) {
             res.send(err.message);
         } else {
-            isCorrect = rows.Result;
+            isCorrect = rows[0].Result;
             if(isCorrect == 1){
                 res.send("Correct Credentials");
             }else{
