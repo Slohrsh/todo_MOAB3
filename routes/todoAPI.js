@@ -91,11 +91,11 @@ router.get('/getSpecificTodo/:idtodo', function (req, res, next) {
 });
 
 router.put('/updateSpecificTodo', function (req, res, next) {
-    var user = req.headers.user; // Todo irgendwie nach authentifizierung gönnen
-    var description = req.headers.description;
-    var topic = req.headers.topic;
-    var isDone = req.headers.isdone;
-    var idtodos = req.headers.idtodos;//Todo Aus Kontext beschaffen
+    var user = req.body.user; // Todo irgendwie nach authentifizierung gönnen
+    var description = req.body.description;
+    var topic = req.body.topic;
+    var isDone = req.body.isdone;
+    var idtodos = req.body.idtodos;//Todo Aus Kontext beschaffen
 
     var updateQuery = "UPDATE todos SET ";
 
@@ -121,9 +121,9 @@ router.put('/updateSpecificTodo', function (req, res, next) {
     });
 });
 
-router.delete('/deleteSpecificTodo', function (req, res, next) {
-    var user = req.headers.user; //ToDo userID vom login holen
-    var idtodos = req.headers.idtodos;//Todo Aus Kontext beschaffen
+router.put('/deleteSpecificTodo', function (req, res, next) {
+    var user = req.body.user; //ToDo userID vom login holen
+    var idtodos = req.body.idtodos;//Todo Aus Kontext beschaffen
     connection.query("DELETE FROM todos  " +
         "WHERE user = 1 " +
         "AND idtodos = "+ idtodos + " " +
@@ -212,9 +212,9 @@ router.put('/deleteSpecificTask', function (req, res, next) {
     });
 });
 
-router.delete('/deleteAllTasksRelatedToTodo', function (req, res, next) {
-    var user = req.headers.user; //ToDo userID vom login holen
-    var idtodos = req.headers.idtodos;
+router.put('/deleteAllTasksRelatedToTodo', function (req, res, next) {
+    var user = req.body.user; //ToDo userID vom login holen
+    var idtodos = req.body.idtodos;
     connection.query("DELETE FROM todo_tasks " +
         "WHERE todo = " + idtodos + " " +
         "AND (SELECT COUNT(idtodos) " +

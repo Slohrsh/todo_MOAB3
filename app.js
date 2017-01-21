@@ -12,6 +12,7 @@ var taskUI = require('./routes/taskUI');
 var newTodo = require('./routes/newTodo');
 var newTask = require('./routes/newTask');
 var editTask = require('./routes/editTask');
+var editTodo = require('./routes/editTodo');
 
 var app = express();
 
@@ -34,6 +35,7 @@ app.use('/taskUI', taskUI);
 app.use('/newTodo', newTodo);
 app.use('/newTask', newTask);
 app.use('/editTask', editTask);
+app.use('/editTodo', editTodo);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

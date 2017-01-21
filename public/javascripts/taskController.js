@@ -1,7 +1,7 @@
 'use strict';
 var todoApp = angular.module("todo", ['ngMaterial']);
 
-todoApp.controller("taskController", ['exchangeTodoID', '$scope', '$http', '$window', function (exchangeTodoID, $scope, $http, $window) {
+todoApp.controller("taskController", ['exchangeTodoID', '$scope', '$http', '$window', '$mdToast', function (exchangeTodoID, $scope, $http, $window, $mdToast) {
     var id = 1; //exchangeTodoID.get();
 
     $http({
@@ -36,7 +36,11 @@ todoApp.controller("taskController", ['exchangeTodoID', '$scope', '$http', '$win
         $http.put('todoAPI/updateTask', data).then(function successCallback(response) {
             $scope.updateTasks(task);
         }, function errorCallback(response) {
-            alert("KERLE WAS MACHSCH!");
+            $mdToast.show(
+                $mdToast.simple()
+                    .textContent("There was an error updating the Task. Pleasy try it later.")
+                    .hideDelay(3000)
+            );
         });
     };
 
@@ -52,7 +56,30 @@ todoApp.controller("taskController", ['exchangeTodoID', '$scope', '$http', '$win
         $window.location = "editTask";
     }
 
+    $scope.updateTodo = function(){
+        $window.location = "editTodo";
+    }
+
     $scope.deleteTodo = function(){
-        //Todo: Todo und alle tasks die dazugehören löschen
+         var data = {
+            idtodos: id,
+        };
+        $http.put('todoAPI/deleteAllTasksRelatedToTodo', data).then(function successCallback(response) {
+            $http.put('todoAPI/deleteSpecificTodo', data).then(function successCallback(response) {
+                $window.location = "todoUI";
+            }, function errorCallback(response) {
+                $mdToast.show(
+                    $mdToast.simple()
+                        .textContent("Can't delete Todo. Pleas try it later.")
+                        .hideDelay(3000)
+                );
+            });
+        }, function errorCallback(response) {
+            $mdToast.show(
+                $mdToast.simple()
+                    .textContent("Can't delete Todo. Pleas try it later.")
+                    .hideDelay(3000)
+            );
+        });
     }
 }]);
