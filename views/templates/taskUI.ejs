@@ -1,4 +1,4 @@
-<--taskController-->
+<!--taskController-->
 <md-toolbar class="md-hue-2">
     <div class="md-toolbar-tools">
         <h2>
@@ -17,20 +17,14 @@
     <md-icon md-svg-src="images/ic_add_white_24px.svg"></md-icon>
 </md-button>
 <md-content>
-    <md-list flex>
-        <md-list-item class="md-3-line">
-            <div class="md-list-item-text" layout="column" >
-                <h1>Description</h1>
-                <h3>{{tasks[0].description}}</h3>
-            </div>
-        </md-list-item>
-    </md-list>
+    <md-content layout-padding>
+        <h1>Description</h1>
+        <p>{{tasks[0].description}}</p>
+    </md-content>
     <md-divider ></md-divider>
-    <md-list flex>
-        <md-list-item class="md-3-line" ng-repeat="item in tasks" ng-click="editTask(item.idtodo_tasks)">
-            <div class="md-list-item-text" layout="column" >
-                <h3>{{ item.task }}</h3>
-            </div>
+    <md-list>
+        <md-list-item class="secondary-button-padding" ng-repeat="item in tasks" ng-click="editTask(item.idtodo_tasks)">
+            <p>{{ item.task }}</p>
             <md-checkbox ng-checked="item.isDone" ng-click="updateTaskIsDone(item)">
             </md-checkbox>
             <md-divider ></md-divider>

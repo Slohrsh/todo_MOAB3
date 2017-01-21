@@ -1,15 +1,16 @@
 'use strict';
-var todoApp = angular.module("todo", ['ngMaterial']);
+var todoApp = angular.module("todo");
 
-todoApp.controller("newTaskController", ['$scope', '$http', '$window', '$mdToast', function ($scope, $http, $window, $mdToast) {
+todoApp.controller("newTaskController", ['exchangeTodoID', '$scope', '$http', '$location', '$mdToast', function (exchangeTodoID, $scope, $http, $location, $mdToast) {
     $scope.newTodo = function(){
+        var id = exchangeTodoID.get();
         var data = {
-            idtodo: 1, //Todo: richtige id holen
+            idtodo: id,
             task: $scope.todo.task,
             isdone: 0
         };
         $http.post('todoAPI/newTask', data).then(function successCallback(response) {
-            $window.location = "taskUI";
+            $location.path("/taskUI");
         }, function errorCallback(response) {
             $mdToast.show(
                 $mdToast.simple()

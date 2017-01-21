@@ -1,9 +1,20 @@
 'use strict';
-var todoApp = angular.module("todo", ['ngMaterial']);
+var todoApp = angular.module("todo");
 
-todoApp.controller("taskController", ['exchangeTodoID', '$scope', '$http', '$window', '$mdToast', function (exchangeTodoID, $scope, $http, $window, $mdToast) {
-    var id = 1; //exchangeTodoID.get();
-
+todoApp.controller("taskController", [
+    'exchangeTodoID',
+    '$scope',
+    '$http',
+    '$location',
+    '$mdToast',
+    'exchangeTaskID',
+    function (exchangeTodoID,
+              $scope,
+              $http,
+              $location,
+              $mdToast,
+              exchangeTaskID) {
+    var id = exchangeTodoID.get();
     $http({
         method: 'GET',
         url: 'todoAPI/getSpecificTodo/' + id
@@ -49,15 +60,16 @@ todoApp.controller("taskController", ['exchangeTodoID', '$scope', '$http', '$win
     }
 
     $scope.addNewTask = function(){
-        $window.location = "newTask";
+        $location.path("/newTask");
     }
 
-    $scope.editTask = function(){
-        $window.location = "editTask";
+    $scope.editTask = function(taskID){
+        exchangeTaskID.set(taskID);
+        $location.path("/editTask");
     }
 
     $scope.updateTodo = function(){
-        $window.location = "editTodo";
+        $location.path("/editTodo");
     }
 
     $scope.deleteTodo = function(){
@@ -66,7 +78,7 @@ todoApp.controller("taskController", ['exchangeTodoID', '$scope', '$http', '$win
         };
         $http.put('todoAPI/deleteAllTasksRelatedToTodo', data).then(function successCallback(response) {
             $http.put('todoAPI/deleteSpecificTodo', data).then(function successCallback(response) {
-                $window.location = "todoUI";
+                $location.path("/todoUI");
             }, function errorCallback(response) {
                 $mdToast.show(
                     $mdToast.simple()

@@ -1,7 +1,7 @@
 'use strict';
-var todoApp = angular.module("todo", ['ngMaterial']);
+var todoApp = angular.module("todo");
 
-todoApp.controller("todoController", ['exchangeTodoID', '$scope', '$http', '$window', function (exchangeTodoID, $scope, $http, $window) {
+todoApp.controller("todoController", ['exchangeTodoID', '$scope', '$http', '$location', function (exchangeTodoID, $scope, $http, $location) {
     $http({
         method: 'GET',
         url: 'todoAPI/allTodosFromUser'
@@ -12,11 +12,11 @@ todoApp.controller("todoController", ['exchangeTodoID', '$scope', '$http', '$win
     });
 
     $scope.showTask = function(id){
-        exchangeTodoID.set([{id:id}]);
-        $window.location = "taskUI";
+        exchangeTodoID.set(id);
+        $location.path("/taskUI");
     }
 
     $scope.addNewTodo = function(){
-        $window.location = "newTodo";
+        $location.path("/newTodo");
     }
 }]);

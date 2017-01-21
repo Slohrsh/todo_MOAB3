@@ -1,16 +1,31 @@
 'use strict';
-var todoApp = angular.module("todo", ['ngMaterial']);
+var todoApp = angular.module("todo");
 
-todoApp.controller("editTaskController", ['$scope', '$http', '$window', '$mdToast', function ($scope, $http, $window, $mdToast) {
+todoApp.controller("editTaskController", ['$scope',
+    '$http',
+    '$location',
+    '$mdToast',
+    'exchangeTaskID',
+    'exchangeTodoID',
+    function (
+        $scope,
+        $http,
+        $location,
+        $mdToast,
+        exchangeTaskID,
+        exchangeTodoID) {
+    var taskId = exchangeTaskID.get();
+    var todoId = exchangeTodoID.get();
+
     $scope.updateTask = function(){
         var data = {
-            idtodos: 1, //Todo: richtige id holen
-            idtodo_tasks: 1, //Todo: richtige id holen
+            idtodos: todoId,
+            idtodo_tasks: taskId,
             task: $scope.todo.task,
             isdone: 0
         };
         $http.put('todoAPI/updateTask', data).then(function successCallback(response) {
-            $window.location = "taskUI";
+            $location.path("/taskUI");
         }, function errorCallback(response) {
             $mdToast.show(
                 $mdToast.simple()
@@ -22,11 +37,11 @@ todoApp.controller("editTaskController", ['$scope', '$http', '$window', '$mdToas
 
     $scope.deleteTask = function () {
         var data = {
-            idtodos: 1, //Todo: richtige id holen
-            idtodo_tasks: 1 //Todo: richtige id holen
+            idtodos: todoId,
+            idtodo_tasks: taskId
         };
         $http.put('todoAPI/deleteSpecificTask', data).then(function successCallback(response) {
-            $window.location = "taskUI";
+            $location.path("/taskUI");
         }, function errorCallback(response) {
             $mdToast.show(
                 $mdToast.simple()

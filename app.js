@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
+var logIn = require('./routes/login');
 var todoAPI = require('./routes/todoAPI');
 var todoUI = require('./routes/todoUI');
 var taskUI = require('./routes/taskUI');
@@ -29,6 +30,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
+app.use('/logIn', logIn);
 app.use('/todoAPI', todoAPI);
 app.use('/todoUI', todoUI);
 app.use('/taskUI', taskUI);
