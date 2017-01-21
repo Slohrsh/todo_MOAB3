@@ -1,7 +1,18 @@
 'use strict';
 var todoApp = angular.module("todo");
 
-todoApp.controller("todoController", ['exchangeTodoID', '$scope', '$http', '$location', function (exchangeTodoID, $scope, $http, $location) {
+todoApp.controller("todoController", [
+    'exchangeTodoID',
+    '$scope',
+    '$http',
+    '$location',
+    'exchangeUserID',
+    function (
+        exchangeTodoID,
+        $scope,
+        $http,
+        $location,
+        exchangeUserID) {
     $http({
         method: 'GET',
         url: 'todoAPI/allTodosFromUser'

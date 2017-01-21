@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var mysql = require('mysql');
+var exchangeUserID = require('exchangeUserID');
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'user_db',
@@ -26,7 +27,7 @@ router.post('/userAuthentification', function(req, res, next){
     var password = req.body.password;
 
     var query =
-        "SELECT Count(*) AS Result " +
+        "SELECT Count(*) AS Result, iduser " +
         "FROM user " +
         "WHERE username = '" + user + "' " +
         "AND password = '" + password + "'";
@@ -35,18 +36,13 @@ router.post('/userAuthentification', function(req, res, next){
         if (err) {
             res.send(err.message);
         } else {
-            isCorrect = rows[0].Result;
-            if(isCorrect == 1){
-                res.send("Correct Credentials");
-            }else{
-                res.send("Incorrect Credentials");
-            }
+            res.send(rows);
         }
     });
 });
 
 router.get('/allTodosFromUser', function (req, res, next) {
-    //ToDo userID vom login holen
+    alert(exchangeUserID.get());
     connection.query("SELECT idtodos, topic, description, isDone " +
         "FROM todos " +
         "WHERE user=1", function (err, rows) {

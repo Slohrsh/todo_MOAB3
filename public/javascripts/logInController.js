@@ -1,14 +1,26 @@
 'use strict';
-var todoApp = angular.module("todo");
+var todoApp = angular.module("todoAPI");
 
-todoApp.controller("logInController", ['$scope', '$http', '$location', '$mdToast', function ($scope, $http, $location, $mdToast) {
+todoApp.controller("logInController", [
+    '$scope',
+    '$http',
+    '$location',
+    '$mdToast',
+    'exchangeUserID',
+    function (
+        $scope,
+        $http,
+        $location,
+        $mdToast,
+        exchangeUserID) {
     $scope.verifyCredentials = function(){
         var data = {
             user: $scope.name,
             password: $scope.passwd
         };
         $http.post('todoAPI/userAuthentification', data).then(function successCallback(response) {
-            if(response.data == "Correct Credentials"){
+            if(response.data[0].Result == 1){
+                exchangeUserID.set(response.data[0].iduser);
                 $location.path("/todoUI");
             }else{
                 $mdToast.show(
