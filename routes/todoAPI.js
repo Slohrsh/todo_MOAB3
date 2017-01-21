@@ -41,7 +41,6 @@ router.post('/userAuthentification', function(req, res, next){
 });
 
 router.get('/allTodosFromUser', function (req, res, next) {
-    alert(exchangeUserID.get());
     connection.query("SELECT idtodos, topic, description, isDone " +
         "FROM todos " +
         "WHERE user=1", function (err, rows) {
