@@ -8,33 +8,46 @@ todoApp.controller("editTodoController", [
     '$mdToast',
     'exchangeTodoID',
     'exchangeSessionKey',
+    'exchangeValues',
     function (
         $scope,
         $http,
         $location,
         $mdToast,
         exchangeTodoID,
-        exchangeSessionKey
-    ) {
+        exchangeSessionKey,
+        exchangeValues) {
 
     var id = exchangeTodoID.get();
     var sessionKey = exchangeSessionKey.get();
-    $scope.updateTodo = function(){
-        var data = {
-            sessionkey : sessionKey,
-            idtodos: id,
-            topic: $scope.todo.topic,
-            description: $scope.todo.description,
-            isdone: 0
-        };
-        $http.put('todoAPI/updateSpecificTodo', data).then(function successCallback(response) {
+    if(sessionKey == 0){
+        $location.path("/");
+    }else{
+        var taskValues = exchangeValues.get();
+        $scope.topic = taskValues.topic;
+        $scope.description = taskValues.description;
+
+        $scope.goBack = function () {
             $location.path("/taskUI");
-        }, function errorCallback(response) {
-            $mdToast.show(
-                $mdToast.simple()
-                    .textContent("Can't update Todo. Please try it later")
-                    .hideDelay(3000)
-            );
-        });
-    };
+        }
+
+        $scope.updateTodo = function(){
+            var data = {
+                sessionkey : sessionKey,
+                idtodos: id,
+                topic: $scope.topic,
+                description: $scope.description,
+                isdone: 0
+            };
+            $http.put('todoAPI/updateSpecificTodo', data).then(function successCallback(response) {
+                $location.path("/taskUI");
+            }, function errorCallback(response) {
+                $mdToast.show(
+                    $mdToast.simple()
+                        .textContent("Can't update Todo. Please try it later")
+                        .hideDelay(3000)
+                );
+            });
+        };
+    }
 }]);

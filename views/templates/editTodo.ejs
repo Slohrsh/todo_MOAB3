@@ -1,6 +1,10 @@
 <!--editTodoController-->
 <md-toolbar class="md-hue-2">
     <div class="md-toolbar-tools">
+        <md-button class="md-icon-button" aria-label="Back" ng-click="goBack()">
+            <md-icon md-svg-icon="images/ic_keyboard_arrow_left_white_24px.svg">back</md-icon>
+        </md-button>
+        <span flex></span>
         <h2>
             <span>Edit Todo</span>
         </h2>
@@ -11,12 +15,12 @@
     <div>
         <md-input-container>
             <label>Topic</label>
-            <input ng-model="todo.topic">
+            <input ng-model="topic">
         </md-input-container>
 
         <md-input-container>
             <label>Description</label>
-            <input ng-model="todo.description">
+            <input ng-model="description">
         </md-input-container>
     </div>
 </md-content>

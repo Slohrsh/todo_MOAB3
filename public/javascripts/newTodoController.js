@@ -15,21 +15,29 @@ todoApp.controller("newTodoController", [
         exchangeSessionKey) {
 
     var sessionKey = exchangeSessionKey.get();
-    $scope.newTodo = function(){
-        var data = {
-            sessionKey: sessionKey,
-            topic: $scope.todo.topic,
-            description: $scope.todo.description,
-            isdone: 0
-        };
-        $http.post('todoAPI/newSpecificTodo', data).then(function successCallback(response) {
+    if(sessionKey == 0){
+        $location.path("/");
+    }else{
+        $scope.goBack = function () {
             $location.path("/todoUI");
-        }, function errorCallback(response) {
-            $mdToast.show(
-                $mdToast.simple()
-                    .textContent("Can't create Todo. Please try it later")
-                    .hideDelay(3000)
-            );
-        });
-    };
+        }
+
+        $scope.newTodo = function(){
+            var data = {
+                sessionKey: sessionKey,
+                topic: $scope.todo.topic,
+                description: $scope.todo.description,
+                isdone: 0
+            };
+            $http.post('todoAPI/newSpecificTodo', data).then(function successCallback(response) {
+                $location.path("/todoUI");
+            }, function errorCallback(response) {
+                $mdToast.show(
+                    $mdToast.simple()
+                        .textContent("Can't create Todo. Please try it later")
+                        .hideDelay(3000)
+                );
+            });
+        };
+    }
 }]);

@@ -1,5 +1,5 @@
 angular.module('todo').factory('exchangeSessionKey', function() {
-    var sessionKey = {};
+    var sessionKey = 0;
     function set(key) {
         sessionKey = key;
     }

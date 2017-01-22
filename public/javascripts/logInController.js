@@ -13,6 +13,10 @@ todoApp.controller("logInController", [
         $location,
         $mdToast,
         exchangeSessionKey) {
+
+    $scope.signIn = function(){
+        $location.path("/signIn");//Todo Sign in erstellen
+    }
     $scope.verifyCredentials = function(){
         var data = {
             user: $scope.name,

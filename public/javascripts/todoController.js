@@ -15,21 +15,30 @@ todoApp.controller("todoController", [
         exchangeSessionKey) {
 
     var sessionKey = exchangeSessionKey.get();
-    $http({
-        method: 'GET',
-        url: 'todoAPI/allTodosFromUser/' + sessionKey
-    }).then(function successCallback(response) {
-        $scope.todos = response.data;
-    }, function errorCallback(response) {
-        alert("KERLE WAS MACHSCH!");
-    });
+    if(sessionKey == 0){
+        $location.path("/");
+    }else{
+        $http({
+            method: 'GET',
+            url: 'todoAPI/allTodosFromUser/' + sessionKey
+        }).then(function successCallback(response) {
+            $scope.todos = response.data;
+        }, function errorCallback(response) {
+            alert("KERLE WAS MACHSCH!");
+        });
 
-    $scope.showTask = function(id){
-        exchangeTodoID.set(id);
-        $location.path("/taskUI");
-    }
+        $scope.showTask = function(id){
+            exchangeTodoID.set(id);
+            $location.path("/taskUI");
+        }
 
-    $scope.addNewTodo = function(){
-        $location.path("/newTodo");
+        $scope.logout = function () {
+            //Todo logout implementieren
+            $location.path("/");
+        }
+
+        $scope.addNewTodo = function(){
+            $location.path("/newTodo");
+        }
     }
 }]);

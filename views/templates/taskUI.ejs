@@ -1,11 +1,16 @@
 <!--taskController-->
 <md-toolbar class="md-hue-2">
     <div class="md-toolbar-tools">
+        <md-button class="md-icon-button" aria-label="Back" ng-click="goBack()">
+            <md-icon md-svg-icon="images/ic_keyboard_arrow_left_white_24px.svg">back</md-icon>
+
+        </md-button>
+        <span flex></span>
         <h2>
             <span >{{ topic }}</span>
         </h2>
         <span flex></span>
-        <md-button class="md-icon-button" aria-label="Edit" ng-click="updateTodo()">
+        <md-button class="md-icon-button" aria-label="Edit" ng-click="updateTodo(tasks[0])">
             <md-icon md-svg-icon="images/ic_edit_white_24px.svg"></md-icon>
         </md-button>
         <md-button class="md-icon-button" aria-label="Delete" ng-click="deleteTodo()">
@@ -23,7 +28,7 @@
     </md-content>
     <md-divider ></md-divider>
     <md-list>
-        <md-list-item class="secondary-button-padding" ng-repeat="item in tasks" ng-click="editTask(item.idtodo_tasks)">
+        <md-list-item class="secondary-button-padding" ng-repeat="item in tasks" ng-click="editTask(item)">
             <p>{{ item.task }}</p>
             <md-checkbox ng-checked="item.isDone" ng-click="updateTaskIsDone(item)">
             </md-checkbox>
