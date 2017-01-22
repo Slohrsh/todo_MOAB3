@@ -7,18 +7,22 @@ todoApp.controller("editTaskController", ['$scope',
     '$mdToast',
     'exchangeTaskID',
     'exchangeTodoID',
+    'exchangeSessionKey',
     function (
         $scope,
         $http,
         $location,
         $mdToast,
         exchangeTaskID,
-        exchangeTodoID) {
+        exchangeTodoID,
+        exchangeSessionKey) {
     var taskId = exchangeTaskID.get();
     var todoId = exchangeTodoID.get();
+    var sessionKey = exchangeSessionKey.get();
 
     $scope.updateTask = function(){
         var data = {
+            sessionkey : sessionKey,
             idtodos: todoId,
             idtodo_tasks: taskId,
             task: $scope.todo.task,
@@ -37,6 +41,7 @@ todoApp.controller("editTaskController", ['$scope',
 
     $scope.deleteTask = function () {
         var data = {
+            sessionkey : sessionKey,
             idtodos: todoId,
             idtodo_tasks: taskId
         };

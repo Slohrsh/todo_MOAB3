@@ -6,16 +6,18 @@ todoApp.controller("todoController", [
     '$scope',
     '$http',
     '$location',
-    'exchangeUserID',
+    'exchangeSessionKey',
     function (
         exchangeTodoID,
         $scope,
         $http,
         $location,
-        exchangeUserID) {
+        exchangeSessionKey) {
+
+    var sessionKey = exchangeSessionKey.get();
     $http({
         method: 'GET',
-        url: 'todoAPI/allTodosFromUser'
+        url: 'todoAPI/allTodosFromUser/' + sessionKey
     }).then(function successCallback(response) {
         $scope.todos = response.data;
     }, function errorCallback(response) {

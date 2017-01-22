@@ -1,27 +1,35 @@
 'use strict';
-var todoApp = angular.module("todoAPI");
+var todoApp = angular.module("todo");
 
 todoApp.controller("logInController", [
     '$scope',
     '$http',
     '$location',
     '$mdToast',
-    'exchangeUserID',
+    'exchangeSessionKey',
     function (
         $scope,
         $http,
         $location,
         $mdToast,
-        exchangeUserID) {
+        exchangeSessionKey) {
     $scope.verifyCredentials = function(){
         var data = {
             user: $scope.name,
             password: $scope.passwd
         };
         $http.post('todoAPI/userAuthentification', data).then(function successCallback(response) {
-            if(response.data[0].Result == 1){
-                exchangeUserID.set(response.data[0].iduser);
-                $location.path("/todoUI");
+            if(response.data != 0){
+                if(response.data != "-1"){
+                    exchangeSessionKey.set(response.data);
+                    $location.path("/todoUI");
+                }else{
+                    $mdToast.show(
+                        $mdToast.simple()
+                            .textContent("There was an internal Error. Pleasy try it later")
+                            .hideDelay(3000)
+                    );
+                }
             }else{
                 $mdToast.show(
                     $mdToast.simple()

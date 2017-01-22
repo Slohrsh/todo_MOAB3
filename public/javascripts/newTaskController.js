@@ -1,10 +1,27 @@
 'use strict';
 var todoApp = angular.module("todo");
 
-todoApp.controller("newTaskController", ['exchangeTodoID', '$scope', '$http', '$location', '$mdToast', function (exchangeTodoID, $scope, $http, $location, $mdToast) {
-    $scope.newTodo = function(){
+todoApp.controller("newTaskController", [
+    'exchangeTodoID',
+    '$scope',
+    '$http',
+    '$location',
+    '$mdToast',
+    'exchangeSessionKey',
+    function (
+        exchangeTodoID,
+        $scope,
+        $http,
+        $location,
+        $mdToast,
+        exchangeSessionKey) {
+
+
+    $scope.newTask = function(){
         var id = exchangeTodoID.get();
+        var sessionKey = exchangeSessionKey.get();
         var data = {
+            sessionkey : sessionKey,
             idtodo: id,
             task: $scope.todo.task,
             isdone: 0

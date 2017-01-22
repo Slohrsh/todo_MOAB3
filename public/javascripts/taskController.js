@@ -8,18 +8,22 @@ todoApp.controller("taskController", [
     '$location',
     '$mdToast',
     'exchangeTaskID',
+    'exchangeSessionKey',
     function (exchangeTodoID,
               $scope,
               $http,
               $location,
               $mdToast,
-              exchangeTaskID) {
-    var id = exchangeTodoID.get();
-    $http({
-        method: 'GET',
-        url: 'todoAPI/getSpecificTodo/' + id
-    }).then(function successCallback(response) {
+              exchangeTaskID,
+              exchangeSessionKey) {
 
+    var id = exchangeTodoID.get();
+    var sessionKey = exchangeSessionKey.get();
+    var data = {
+        idtodo: id,
+        sessionkey: sessionKey
+    };
+    $http.post('todoAPI/getSpecificTodo', data).then(function successCallback(response) {
         $scope.tasks = response.data;
         $scope.topic = $scope.tasks[0].topic;
     }, function errorCallback(response) {
@@ -39,6 +43,7 @@ todoApp.controller("taskController", [
 
     $scope.updateTaskInDB = function(task){
         var data = {
+            sessionkey : sessionKey,
             idtodos: id,
             idtodo_tasks: task.idtodo_tasks,
             task: task.task,
@@ -74,7 +79,8 @@ todoApp.controller("taskController", [
 
     $scope.deleteTodo = function(){
          var data = {
-            idtodos: id,
+             sessionkey : sessionKey,
+             idtodos: id,
         };
         $http.put('todoAPI/deleteAllTasksRelatedToTodo', data).then(function successCallback(response) {
             $http.put('todoAPI/deleteSpecificTodo', data).then(function successCallback(response) {

@@ -7,16 +7,21 @@ todoApp.controller("editTodoController", [
     '$location',
     '$mdToast',
     'exchangeTodoID',
+    'exchangeSessionKey',
     function (
         $scope,
         $http,
         $location,
         $mdToast,
-        exchangeTodoID
+        exchangeTodoID,
+        exchangeSessionKey
     ) {
+
     var id = exchangeTodoID.get();
+    var sessionKey = exchangeSessionKey.get();
     $scope.updateTodo = function(){
         var data = {
+            sessionkey : sessionKey,
             idtodos: id,
             topic: $scope.todo.topic,
             description: $scope.todo.description,
