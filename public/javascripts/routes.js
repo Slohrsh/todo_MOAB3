@@ -12,6 +12,12 @@ todo.config(function($routeProvider) {
             controller  : 'logInController'
         })
 
+        .when('/signIn', {
+            url : '/signIn',
+            templateUrl : '/signIn',
+            controller  : 'signInController'
+        })
+
         // route for the about page
         .when('/todoUI', {
             url : '/todoUI',

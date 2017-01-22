@@ -15,7 +15,7 @@ todoApp.controller("logInController", [
         exchangeSessionKey) {
 
     $scope.signIn = function(){
-        $location.path("/signIn");//Todo Sign in erstellen
+        $location.path("/signIn");
     }
     $scope.verifyCredentials = function(){
         var data = {

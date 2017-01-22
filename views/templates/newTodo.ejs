@@ -18,9 +18,9 @@
             <input ng-model="todo.topic">
         </md-input-container>
 
-        <md-input-container>
+        <md-input-container class="md-block">
             <label>Description</label>
-            <input ng-model="todo.description">
+            <textarea ng-model="todo.description" md-maxlength="150" rows="2"></textarea>
         </md-input-container>
     </div>
 </md-content>

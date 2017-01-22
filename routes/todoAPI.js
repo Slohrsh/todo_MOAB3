@@ -42,6 +42,37 @@ router.get('/', function(req, res, next) {
     res.render('API_documentation');
 });
 
+router.post('/createUser', function(req, res, next){
+    var user = req.body.user;
+    var password = req.body.password;
+
+    var query =
+        "INSERT INTO user (username, password) VALUES ('"+user+"', '"+password+"')";
+
+    connection.query(query, function (err, rows) {
+        if (err) {
+            res.send(err.message);
+        } else {
+            res.send("1");
+        }
+    });
+
+    var createSessionKey = function(userID){
+        var sessionKey = Math.floor((Math.random() * 10000000) + 1);
+        var query =
+            "INSERT INTO session_keys " +
+            "(user_id, session_key) " +
+            "VALUES ('"+userID+"', '"+sessionKey+"')";
+        connection.query(query, function (err, rows) {
+            if (err) {
+                res.send("-1");
+            } else {
+                res.send("" + sessionKey);
+            }
+        });
+    }
+});
+
 router.post('/userAuthentification', function(req, res, next){
     var user = req.body.user;
     var password = req.body.password;

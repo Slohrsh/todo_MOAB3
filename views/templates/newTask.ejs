@@ -13,9 +13,9 @@
 </md-toolbar>
 <md-content layout-gt-sm="row" layout-padding>
     <div>
-        <md-input-container>
+        <md-input-container class="md-block">
             <label>Task</label>
-            <input ng-model="todo.task">
+            <textarea ng-model="todo.task" md-maxlength="150" rows="2"></textarea>
         </md-input-container>
     </div>
 </md-content>
