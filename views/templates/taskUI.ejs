@@ -10,7 +10,7 @@
             <span >{{ topic }}</span>
         </h2>
         <span flex></span>
-        <md-button class="md-icon-button" aria-label="Edit" ng-click="updateTodo(tasks[0])">
+        <md-button class="md-icon-button" aria-label="Edit" ng-click="updateTodo()">
             <md-icon md-svg-icon="images/ic_edit_white_24px.svg"></md-icon>
         </md-button>
         <md-button class="md-icon-button" aria-label="Delete" ng-click="deleteTodo()">
@@ -24,7 +24,7 @@
 <md-content>
     <md-content layout-padding>
         <h1>Description</h1>
-        <p>{{tasks[0].description}}</p>
+        <p>{{description}}</p>
     </md-content>
     <md-divider ></md-divider>
     <md-list>

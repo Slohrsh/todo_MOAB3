@@ -24,13 +24,15 @@ todoApp.controller("taskController", [
     if(sessionKey == 0){
         $location.path("/");
     }else{
+        var todo = exchangeValues.get();
+        $scope.topic = todo.topic;
+        $scope.description = todo.description;
         var data = {
             idtodo: id,
             sessionkey: sessionKey
         };
         $http.post('todoAPI/getSpecificTodo', data).then(function successCallback(response) {
             $scope.tasks = response.data;
-            $scope.topic = $scope.tasks[0].topic;
         }, function errorCallback(response) {
             alert("KERLE WAS MACHSCH!");
         });
@@ -83,8 +85,7 @@ todoApp.controller("taskController", [
             $location.path("/editTask");
         }
 
-        $scope.updateTodo = function(todo){
-            exchangeValues.set(todo);
+        $scope.updateTodo = function(){
             $location.path("/editTodo");
         }
 

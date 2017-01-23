@@ -23,9 +23,9 @@ todoApp.controller("editTodoController", [
     if(sessionKey == 0){
         $location.path("/");
     }else{
-        var taskValues = exchangeValues.get();
-        $scope.topic = taskValues.topic;
-        $scope.description = taskValues.description;
+        var todoValues = exchangeValues.get();
+        $scope.topic = todoValues.topic;
+        $scope.description = todoValues.description;
 
         $scope.goBack = function () {
             $location.path("/taskUI");
@@ -37,9 +37,14 @@ todoApp.controller("editTodoController", [
                 idtodos: id,
                 topic: $scope.topic,
                 description: $scope.description,
-                isdone: 0
+                isdone: todoValues.isDone
             };
             $http.put('todoAPI/updateSpecificTodo', data).then(function successCallback(response) {
+                var newData = {
+                    topic : $scope.topic,
+                    description : $scope.description
+                }
+                exchangeValues.set(newData);
                 $location.path("/taskUI");
             }, function errorCallback(response) {
                 $mdToast.show(

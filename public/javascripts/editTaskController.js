@@ -35,7 +35,7 @@ todoApp.controller("editTaskController", ['$scope',
                 idtodos: todoId,
                 idtodo_tasks: taskId,
                 task: $scope.task,
-                isdone: 0
+                isdone: taskValues.isDone
             };
             $http.put('todoAPI/updateTask', data).then(function successCallback(response) {
                 $location.path("/taskUI");

@@ -17,29 +17,23 @@ connection.connect(function (err) {
     console.log('connected as id ' + connection.threadId);
 });
 
-var validateSessionKey = function(sessionKey){
-    var id = 0;
+router.get('/', function(req, res, next) {
+    res.render('API_documentation');
+});
+
+router.post('/deleteSessionKey', function(req, res, next){
+    var sessionKey = req.body.sessionkey;
+
     var query =
-        "SELECT user_id as ID " +
-        "FROM session_keys " +
-        "WHERE session_key = '"+sessionKey+"'";
+        "DELETE FROM session_keys WHERE session_key='"+sessionKey+"'";
 
     connection.query(query, function (err, rows) {
         if (err) {
             res.send(err.message);
         } else {
-            var id = 0;
-            if(rows.affectedRows == 0){
-                id = 0;
-            }else {
-                id = rows[0].ID;
-            }
+            res.send("1");
         }
     });
-};
-
-router.get('/', function(req, res, next) {
-    res.render('API_documentation');
 });
 
 router.post('/createUser', function(req, res, next){
@@ -56,21 +50,6 @@ router.post('/createUser', function(req, res, next){
             res.send("1");
         }
     });
-
-    var createSessionKey = function(userID){
-        var sessionKey = Math.floor((Math.random() * 10000000) + 1);
-        var query =
-            "INSERT INTO session_keys " +
-            "(user_id, session_key) " +
-            "VALUES ('"+userID+"', '"+sessionKey+"')";
-        connection.query(query, function (err, rows) {
-            if (err) {
-                res.send("-1");
-            } else {
-                res.send("" + sessionKey);
-            }
-        });
-    }
 });
 
 router.post('/userAuthentification', function(req, res, next){
@@ -114,7 +93,6 @@ router.post('/userAuthentification', function(req, res, next){
 });
 
 router.get('/allTodosFromUser/:sessionkey', function (req, res, next) {
-    var userID = validateSessionKey(req.params.sessionkey);
 
     var query =
         "SELECT user_id as ID " +
@@ -435,17 +413,17 @@ router.put('/deleteAllTasksRelatedToTodo', function (req, res, next) {
         if (err) {
             res.send(err.message);
         } else {
-            var id = 0;
+            var userID = 0;
             if(rows.affectedRows == 0){
-                id = 0;
+                userID = 0;
             }else {
-                id = rows[0].ID;
+                userID = rows[0].ID;
                 connection.query("DELETE FROM todo_tasks " +
                     "WHERE todo = " + idtodos + " " +
                     "AND (SELECT COUNT(idtodos) " +
                     "FROM todos " +
                     "WHERE idtodos = " + idtodos + " " +
-                    "AND user = 1)>0", function (err, rows) {
+                    "AND user = "+userID+")>0", function (err, rows) {
                     if (err) {
                         res.send(err.message);
                     } else {
