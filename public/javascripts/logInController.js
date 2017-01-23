@@ -1,17 +1,52 @@
-/**
- * Created by Sebastian on 19.01.2017.
- */
-/**
- * Created by Sebastian on 18.01.2017.
- */
 'use strict';
-var todoApp = angular.module("todo", ['ngMaterial']);
+var todoApp = angular.module("todo");
 
-todoApp.controller("logInController", ['$scope', '$http', '$window', function ($scope, $http, $window) {
-    //login Abfragen
+todoApp.controller("logInController", [
+    '$scope',
+    '$http',
+    '$location',
+    '$mdToast',
+    'exchangeSessionKey',
+    function (
+        $scope,
+        $http,
+        $location,
+        $mdToast,
+        exchangeSessionKey) {
+
+    $scope.signIn = function(){
+        $location.path("/signIn");
+    }
     $scope.verifyCredentials = function(){
-        /*$scope.user.passwd;
-        $scope.user.name;*/
-        $window.location = "todoUI";
+        var data = {
+            user: $scope.name,
+            password: $scope.passwd
+        };
+        $http.post('todoAPI/userAuthentification', data).then(function successCallback(response) {
+            if(response.data != 0){
+                if(response.data != "-1"){
+                    exchangeSessionKey.set(response.data);
+                    $location.path("/todoUI");
+                }else{
+                    $mdToast.show(
+                        $mdToast.simple()
+                            .textContent("There was an internal Error. Pleasy try it later")
+                            .hideDelay(3000)
+                    );
+                }
+            }else{
+                $mdToast.show(
+                    $mdToast.simple()
+                        .textContent("Invalid Username or Password")
+                        .hideDelay(3000)
+                );
+            }
+        }, function errorCallback(response) {
+            $mdToast.show(
+                $mdToast.simple()
+                    .textContent("There is no connection to the server. Please try it later.")
+                    .hideDelay(3000)
+            );
+        });
     }
 }]);

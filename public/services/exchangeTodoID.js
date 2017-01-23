@@ -1,10 +1,10 @@
 angular.module('todo').factory('exchangeTodoID', function() {
-    var taskID = {};
+    var tododID = 0;
     function set(id) {
-        taskID = id;
+        tododID = id;
     }
     function get() {
-        return taskID;
+        return tododID;
     }
 
     return {

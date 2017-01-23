@@ -1,21 +1,46 @@
 'use strict';
-var todoApp = angular.module("todo", ['ngMaterial']);
+var todoApp = angular.module("todo");
 
-todoApp.controller("newTaskController", ['$scope', '$http', '$window', '$mdToast', function ($scope, $http, $window, $mdToast) {
-    $scope.newTodo = function(){
-        var data = {
-            idtodo: 1, //Todo: richtige id holen
-            task: $scope.todo.task,
-            isdone: 0
+todoApp.controller("newTaskController", [
+    'exchangeTodoID',
+    '$scope',
+    '$http',
+    '$location',
+    '$mdToast',
+    'exchangeSessionKey',
+    function (
+        exchangeTodoID,
+        $scope,
+        $http,
+        $location,
+        $mdToast,
+        exchangeSessionKey) {
+
+    var sessionKey = exchangeSessionKey.get();
+    if(sessionKey == 0){
+        $location.path("/");
+    }else{
+        $scope.goBack = function () {
+            $location.path("/taskUI");
+        }
+
+        $scope.newTask = function(){
+            var id = exchangeTodoID.get();
+            var data = {
+                sessionkey : sessionKey,
+                idtodo: id,
+                task: $scope.todo.task,
+                isdone: 0
+            };
+            $http.post('todoAPI/newTask', data).then(function successCallback(response) {
+                $location.path("/taskUI");
+            }, function errorCallback(response) {
+                $mdToast.show(
+                    $mdToast.simple()
+                        .textContent("Can't create Task. Please try it later")
+                        .hideDelay(3000)
+                );
+            });
         };
-        $http.post('todoAPI/newTask', data).then(function successCallback(response) {
-            $window.location = "taskUI";
-        }, function errorCallback(response) {
-            $mdToast.show(
-                $mdToast.simple()
-                    .textContent("Can't create Task. Please try it later")
-                    .hideDelay(3000)
-            );
-        });
-    };
+    }
 }]);

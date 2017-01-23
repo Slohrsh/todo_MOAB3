@@ -6,12 +6,15 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
+var logIn = require('./routes/login');
+var signIn = require('./routes/signIn');
 var todoAPI = require('./routes/todoAPI');
 var todoUI = require('./routes/todoUI');
 var taskUI = require('./routes/taskUI');
 var newTodo = require('./routes/newTodo');
 var newTask = require('./routes/newTask');
 var editTask = require('./routes/editTask');
+var editTodo = require('./routes/editTodo');
 
 var app = express();
 
@@ -28,12 +31,15 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
+app.use('/logIn', logIn);
+app.use('/signIn', signIn);
 app.use('/todoAPI', todoAPI);
 app.use('/todoUI', todoUI);
 app.use('/taskUI', taskUI);
 app.use('/newTodo', newTodo);
 app.use('/newTask', newTask);
 app.use('/editTask', editTask);
+app.use('/editTodo', editTodo);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

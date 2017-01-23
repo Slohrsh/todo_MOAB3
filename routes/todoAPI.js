@@ -21,213 +21,419 @@ router.get('/', function(req, res, next) {
     res.render('API_documentation');
 });
 
-router.post('/userAuthentification', function(req, res, next){
-    var user = req.body.user;
-    var idtodos = req.body.password;
+router.post('/deleteSessionKey', function(req, res, next){
+    var sessionKey = req.body.sessionkey;
 
     var query =
-        "SELECT Count(*) AS Result" +
-        "FROM todo.user " +
-        "WHERE username = 'Slohrsh' " +
-        "AND password = 'passwordt'";
+        "DELETE FROM session_keys WHERE session_key='"+sessionKey+"'";
 
     connection.query(query, function (err, rows) {
         if (err) {
             res.send(err.message);
         } else {
-            isCorrect = rows.Result;
-            if(isCorrect == 1){
-                res.send("Correct Credentials");
+            res.send("1");
+        }
+    });
+});
+
+router.post('/createUser', function(req, res, next){
+    var user = req.body.user;
+    var password = req.body.password;
+
+    var query =
+        "INSERT INTO user (username, password) VALUES ('"+user+"', '"+password+"')";
+
+    connection.query(query, function (err, rows) {
+        if (err) {
+            res.send(err.message);
+        } else {
+            res.send("1");
+        }
+    });
+});
+
+router.post('/userAuthentification', function(req, res, next){
+    var user = req.body.user;
+    var password = req.body.password;
+
+    var query =
+        "SELECT Count(*) AS Result, iduser " +
+        "FROM user " +
+        "WHERE username = '" + user + "' " +
+        "AND password = '" + password + "'";
+
+    connection.query(query, function (err, rows) {
+        if (err) {
+            res.send("-1");
+        } else {
+            var result = rows[0].Result;
+            if(result == 1){
+                var userID = rows[0].iduser;
+                createSessionKey(userID);
             }else{
-                res.send("Incorrect Credentials");
+                res.send("0");
+            }
+        }
+    });
+
+    var createSessionKey = function(userID){
+        var sessionKey = Math.floor((Math.random() * 10000000) + 1);
+        var query =
+            "INSERT INTO session_keys " +
+            "(user_id, session_key) " +
+            "VALUES ('"+userID+"', '"+sessionKey+"')";
+        connection.query(query, function (err, rows) {
+            if (err) {
+                res.send("-1");
+            } else {
+                res.send("" + sessionKey);
+            }
+        });
+    }
+});
+
+router.get('/allTodosFromUser/:sessionkey', function (req, res, next) {
+
+    var query =
+        "SELECT user_id as ID " +
+        "FROM session_keys " +
+        "WHERE session_key = '"+req.params.sessionkey+"'";
+
+    connection.query(query, function (err, rows) {
+        if (err) {
+            res.send(err.message);
+        } else {
+            var id = 0;
+            if(rows.affectedRows == 0){
+                id = 0;
+            }else{
+                id = rows[0].ID;
+                connection.query("SELECT idtodos, topic, description, isDone " +
+                    "FROM todos " +
+                    "WHERE user="+id, function (err, rows) {
+                    if (err) {
+                        console.log(err.message);
+                        res.send( { error: err.message  });
+                    }
+                    res.send(rows);
+                });
             }
         }
     });
 });
 
-router.get('/allTodosFromUser', function (req, res, next) {
-    //ToDo userID vom login holen
-    connection.query("SELECT idtodos, topic, description, isDone " +
-        "FROM todos " +
-        "WHERE user=1", function (err, rows) {
-        if (err) {
-            console.log(err.message);
-            res.send( { error: err.message  });
-        }
-        res.send(rows);
-    });
-});
-
 router.post('/newSpecificTodo', function (req, res, next) {
-    var userID = req.body.userid; // Todo irgendwie nach authentifizierung gönnen
+    var sessionKey = req.body.sessionKey;
     var description = req.body.description;
     var topic = req.body.topic;
     var isDone = req.body.isdone;
-    //Todo was gegen SQL-Injection machen!!!
-    connection.query("INSERT INTO todos (user, description, topic, isDone) VALUES " +
-        "("+ userID + ", '" + description + "', '" + topic + "', " + isDone + ")", function (err, rows) {
+
+    var query =
+        "SELECT user_id as ID " +
+        "FROM session_keys " +
+        "WHERE session_key = '"+sessionKey+"'";
+
+    connection.query(query, function (err, rows) {
         if (err) {
             res.send(err.message);
         } else {
-            res.send("Successfully created Todo");
+            var id = 0;
+            if(rows.affectedRows == 0){
+                res.send("Invalid SessionKey!")
+            }else{
+                id = rows[0].ID;
+                var insertQuery = "INSERT INTO todos (user, description, topic, isDone) VALUES " +
+                    "("+ id + ", '" + description + "', '" + topic + "', " + isDone + ")";
+                connection.query(insertQuery, function (err, rows) {
+                    if (err) {
+                        res.send(err.message);
+                    } else {
+                        res.send("Successfully created Todo");
+                    }
+                });
+            }
         }
     });
+
 });
 
-router.get('/getSpecificTodo/:idtodo', function (req, res, next) {
-    //ToDo userID vom login holen
-    var idtodo = req.params.idtodo;
-    connection.query("SELECT todos.topic, todos.description, todo_tasks.task, todo_tasks.isDone, todo_tasks.idtodo_tasks " +
-        "FROM todos , todo_tasks " +
-        "WHERE todos.idtodos=todo_tasks.todo " +
-        "AND todos.user = 1 " +
-        "AND todos.idtodos = " + idtodo, function (err, rows) {
+router.post('/getSpecificTodo', function (req, res, next) {
+    var idtodo = req.body.idtodo;
+    var sessionKey = req.body.sessionkey;
+
+    var query =
+        "SELECT user_id as ID " +
+        "FROM session_keys " +
+        "WHERE session_key = '"+sessionKey+"'";
+
+    connection.query(query, function (err, rows) {
         if (err) {
-            console.log(err.message);
-            res.send( { error: err.message  });
+            res.send(err.message);
+        } else {
+            var id = 0;
+            if(rows.affectedRows == 0){
+                id = 0;
+            }else {
+                id = rows[0].ID;
+                connection.query("SELECT todos.topic, todos.description, todo_tasks.task, todo_tasks.isDone, todo_tasks.idtodo_tasks " +
+                    "FROM todos , todo_tasks " +
+                    "WHERE todos.idtodos=todo_tasks.todo " +
+                    "AND todos.user = "+id+ " " +
+                    "AND todos.idtodos = " + idtodo, function (err, rows) {
+                    if (err) {
+                        console.log(err.message);
+                        res.send( { error: err.message  });
+                    }
+                    res.send(rows);
+                });
+            }
         }
-        res.send(rows);
     });
 });
 
 router.put('/updateSpecificTodo', function (req, res, next) {
-    var user = req.headers.user; // Todo irgendwie nach authentifizierung gönnen
-    var description = req.headers.description;
-    var topic = req.headers.topic;
-    var isDone = req.headers.isdone;
-    var idtodos = req.headers.idtodos;//Todo Aus Kontext beschaffen
+    var sessionKey = req.body.sessionkey;
+    var description = req.body.description;
+    var topic = req.body.topic;
+    var isDone = req.body.isdone;
+    var idtodos = req.body.idtodos;
 
-    var updateQuery = "UPDATE todos SET ";
+    var query =
+        "SELECT user_id as ID " +
+        "FROM session_keys " +
+        "WHERE session_key = '"+sessionKey+"'";
 
-    if(topic != undefined){
-        updateQuery += "topic = '" + topic + "' ";
-    }
-    if(description != undefined){
-        updateQuery += ",description = '" + description + "' ";
-    }
-    if(isDone != undefined){
-        updateQuery += ",isDone = " + isDone + " ";
-    }
-
-    updateQuery +=   "Where user = 1 " +
-        "AND idtodos ="+idtodos;
-
-    connection.query(updateQuery , function (err, rows) {
+    connection.query(query, function (err, rows) {
         if (err) {
             res.send(err.message);
         } else {
-            res.send("Successfully updated Todo");
+            var userID = 0;
+            if(rows.affectedRows == 0){
+                userID = 0;
+            }else {
+                userID = rows[0].ID;
+                var updateQuery = "UPDATE todos SET ";
+
+                if(topic != undefined){
+                    updateQuery += "topic = '" + topic + "' ";
+                }
+                if(description != undefined){
+                    updateQuery += ",description = '" + description + "' ";
+                }
+                if(isDone != undefined){
+                    updateQuery += ",isDone = " + isDone + " ";
+                }
+
+                updateQuery +=   "Where user = "+ userID+ " " +
+                    "AND idtodos ="+idtodos;
+
+                connection.query(updateQuery , function (err, rows) {
+                    if (err) {
+                        res.send(err.message);
+                    } else {
+                        res.send("Successfully updated Todo");
+                    }
+                });
+            }
         }
     });
 });
 
-router.delete('/deleteSpecificTodo', function (req, res, next) {
-    var user = req.headers.user; //ToDo userID vom login holen
-    var idtodos = req.headers.idtodos;//Todo Aus Kontext beschaffen
-    connection.query("DELETE FROM todos  " +
-        "WHERE user = 1 " +
-        "AND idtodos = "+ idtodos + " " +
-        "AND (SELECT COUNT(todo) " +
-        "FROM todo_tasks " +
-        "WHERE todo = " + idtodos + ")<=0", function (err, rows) {
+router.put('/deleteSpecificTodo', function (req, res, next) {
+    var sessionKey = req.body.sessionkey;
+    var idtodos = req.body.idtodos;
+
+    var query =
+        "SELECT user_id as ID " +
+        "FROM session_keys " +
+        "WHERE session_key = '"+sessionKey+"'";
+
+    connection.query(query, function (err, rows) {
         if (err) {
             res.send(err.message);
         } else {
-            if (rows.affectedRows == 0) {
-                res.send("Error deleting specific todo");
-            } else {
-                res.send("Successfully deleted todo");
+            var userID = 0;
+            if(rows.affectedRows == 0){
+                userID = 0;
+            }else {
+                userID = rows[0].ID;
+                connection.query("DELETE FROM todos  " +
+                    "WHERE user = "+userID+" " +
+                    "AND idtodos = "+ idtodos + " " +
+                    "AND (SELECT COUNT(todo) " +
+                    "FROM todo_tasks " +
+                    "WHERE todo = " + idtodos + ")<=0", function (err, rows) {
+                    if (err) {
+                        res.send(err.message);
+                    } else {
+                        if (rows.affectedRows == 0) {
+                            res.send("Error deleting specific todo");
+                        } else {
+                            res.send("Successfully deleted todo");
+                        }
+                    }
+                });
             }
         }
     });
 });
 
 router.post('/newTask', function (req, res, next) {
+    var sessionKey = req.body.sessionkey;
     var idtodo = req.body.idtodo;
     var task = req.body.task;
     var isDone = req.body.isdone;
-    //Todo was gegen SQL-Injection machen!!!
-    connection.query("INSERT INTO todo_tasks (todo, task, isDone) VALUES"+
-        "("+ idtodo + ", '" + task + "', " + isDone + ")", function (err, rows) {
+
+    var query =
+        "SELECT user_id as ID " +
+        "FROM session_keys " +
+        "WHERE session_key = '"+sessionKey+"'";
+
+    connection.query(query, function (err, rows) {
         if (err) {
             res.send(err.message);
         } else {
-            res.send("Successfully created Task");
+            var id = 0;
+            if(rows.affectedRows == 0){
+                id = 0;
+            }else {
+                id = rows[0].ID;
+                connection.query("INSERT INTO todo_tasks (todo, task, isDone) VALUES"+
+                    "("+ idtodo + ", '" + task + "', " + isDone + ")", function (err, rows) {
+                    if (err) {
+                        res.send(err.message);
+                    } else {
+                        res.send("Successfully created Task");
+                    }
+                });
+            }
         }
     });
 });
 
 router.put('/updateTask', function (req, res, next) {
-    var user = req.body.user; // Todo irgendwie nach authentifizierung gönnen
+    var sessionKey = req.body.sessionkey;
     var idtodos = req.body.idtodos;
     var idtodo_tasks = req.body.idtodo_tasks;
     var task = req.body.task;
     var isDone = req.body.isdone;
 
+    var query =
+        "SELECT user_id as ID " +
+        "FROM session_keys " +
+        "WHERE session_key = '"+sessionKey+"'";
 
-    var updateQuery = "UPDATE todo_tasks SET ";
-
-    if(task != undefined){
-        updateQuery += "task = '" + task + "' ";
-    }
-    if(isDone != undefined){
-        updateQuery += ",isDone = " + isDone + " ";
-    }
-
-    updateQuery += "WHERE idtodo_tasks =" + idtodo_tasks;
-
-    connection.query(updateQuery , function (err, rows) {
+    connection.query(query, function (err, rows) {
         if (err) {
             res.send(err.message);
         } else {
-            if (rows.affectedRows == 0) {
-                res.send("Error updating specific Task");
-            }
-            else{
-                res.send("Successfully updated Task");
+            var userID = 0;
+            if(rows.affectedRows == 0){
+                userID = 0;
+            }else {
+                userID = rows[0].ID;
+                var updateQuery = "UPDATE todo_tasks SET ";
+
+                if(task != undefined){
+                    updateQuery += "task = '" + task + "' ";
+                }
+                if(isDone != undefined){
+                    updateQuery += ",isDone = " + isDone + " ";
+                }
+
+                updateQuery += "WHERE idtodo_tasks =" + idtodo_tasks;
+
+                connection.query(updateQuery , function (err, rows) {
+                    if (err) {
+                        res.send(err.message);
+                    } else {
+                        if (rows.affectedRows == 0) {
+                            res.send("Error updating specific Task");
+                        }
+                        else{
+                            res.send("Successfully updated Task");
+                        }
+                    }
+                });
             }
         }
     });
 });
 
 router.put('/deleteSpecificTask', function (req, res, next) {
-    var user = req.body.user; //ToDo userID vom login holen
-    var idtodo_tasks = req.body.idtodo_tasks;//Todo Aus Kontext beschaffen
+    var sessionKey = req.body.sessionkey;
+    var idtodo_tasks = req.body.idtodo_tasks;
     var idtodos = req.body.idtodos;
-    connection.query("DELETE FROM todo_tasks " +
-        "WHERE idtodo_tasks = " + idtodo_tasks + " " +
-        "AND (SELECT COUNT(idtodos) " +
-        "FROM todos " +
-        "WHERE idtodos = " + idtodos + " " +
-        "AND user = 1)>0", function (err, rows) {
+
+    var query =
+        "SELECT user_id as ID " +
+        "FROM session_keys " +
+        "WHERE session_key = '"+sessionKey+"'";
+
+    connection.query(query, function (err, rows) {
         if (err) {
             res.send(err.message);
         } else {
-            if (rows.affectedRows == 0) {
-                res.send("Error deleting specific todo");
-            } else {
-                res.send("Successfully deleted specific Task");
+            var userID = 0;
+            if(rows.affectedRows == 0){
+                userID = 0;
+            }else {
+                userID = rows[0].ID;
+                connection.query("DELETE FROM todo_tasks " +
+                    "WHERE idtodo_tasks = " + idtodo_tasks + " " +
+                    "AND (SELECT COUNT(idtodos) " +
+                    "FROM todos " +
+                    "WHERE idtodos = " + idtodos + " " +
+                    "AND user = "+userID+")>0", function (err, rows) {
+                    if (err) {
+                        res.send(err.message);
+                    } else {
+                        if (rows.affectedRows == 0) {
+                            res.send("Error deleting specific todo");
+                        } else {
+                            res.send("Successfully deleted specific Task");
+                        }
+                    }
+                });
             }
         }
     });
 });
 
-router.delete('/deleteAllTasksRelatedToTodo', function (req, res, next) {
-    var user = req.headers.user; //ToDo userID vom login holen
-    var idtodos = req.headers.idtodos;
-    connection.query("DELETE FROM todo_tasks " +
-        "WHERE todo = " + idtodos + " " +
-        "AND (SELECT COUNT(idtodos) " +
-        "FROM todos " +
-        "WHERE idtodos = " + idtodos + " " +
-        "AND user = 1)>0", function (err, rows) {
+router.put('/deleteAllTasksRelatedToTodo', function (req, res, next) {
+    var sessionKey = req.body.sessionkey;
+    var idtodos = req.body.idtodos;
+
+    var query =
+        "SELECT user_id as ID " +
+        "FROM session_keys " +
+        "WHERE session_key = '"+sessionKey+"'";
+
+    connection.query(query, function (err, rows) {
         if (err) {
             res.send(err.message);
         } else {
-            if (rows.affectedRows == 0) {
-                res.send("Error deleting specific todo");
-            } else {
-                res.send("Successfully deleted all Task referenced to Todo");
+            var userID = 0;
+            if(rows.affectedRows == 0){
+                userID = 0;
+            }else {
+                userID = rows[0].ID;
+                connection.query("DELETE FROM todo_tasks " +
+                    "WHERE todo = " + idtodos + " " +
+                    "AND (SELECT COUNT(idtodos) " +
+                    "FROM todos " +
+                    "WHERE idtodos = " + idtodos + " " +
+                    "AND user = "+userID+")>0", function (err, rows) {
+                    if (err) {
+                        res.send(err.message);
+                    } else {
+                        if (rows.affectedRows == 0) {
+                            res.send("Error deleting specific todo");
+                        } else {
+                            res.send("Successfully deleted all Task referenced to Todo");
+                        }
+                    }
+                });
             }
         }
     });

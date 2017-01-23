@@ -4,55 +4,44 @@
   <!-- Angular Material style sheet -->
   <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
 </head>
-<body ng-app="todo" ng-cloak ng-controller="logInController">
+<body ng-app="todo">
 
-<md-toolbar class="md-hue-2">
-  <div class="md-toolbar-tools">
-    <h2>
-      <span>LogIn</span>
-    </h2>
-    <span flex></span>
+
+<div class="app-body" ng-class="{loading: loading}">
+  <div ng-show="loading" class="app-content-loading">
+    <i class="fa fa-spinner fa-spin loading-spinner"></i>
   </div>
-</md-toolbar>
-<md-content layout-gt-sm="row" layout-padding>
-  <div>
-    <md-input-container>
-      <label>Username</label>
-      <input ng-model="user.name">
-    </md-input-container>
-
-    <md-input-container>
-      <label>Password</label>
-      <input ng-model="user.passwd" type="password">
-    </md-input-container>
+  <div class="app-content" ng-controller="mainController">
+    <div ng-view></div>
   </div>
-</md-content>
-
-<md-button class="md-raised md-primary" ng-click="verifyCredentials()">LogIn</md-button>
+</div>
 
 <!-- Angular Material requires Angular.js Libraries -->
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+<script src="bower_components/angular-route/angular-route.min.js"></script>
+<!--Routes-->
+<script src="javascripts/routes.js"></script>
+<!--Controller-->
 <script src="javascripts/logInController.js"></script>
+<script src="javascripts/signInController.js"></script>
+<script src="javascripts/editTaskController.js"></script>
+<script src="javascripts/editTodoController.js"></script>
+<script src="javascripts/newTaskController.js"></script>
+<script src="javascripts/newTodoController.js"></script>
+<script src="javascripts/taskController.js"></script>
+<script src="javascripts/todoController.js"></script>
+<!--Services-->
+<script src="services/exchangeTodoID.js"></script>
+<script src="services/exchangeTaskID.js"></script>
+<script src="services/exchangeSessionKey.js"></script>
+<script src="services/exchangeValues.js"></script>
 
 <!-- Angular Material Library -->
 <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
 
-<!-- Your application bootstrap
-<script type="text/javascript">
-  /**
-   * You must include the dependency on 'ngMaterial'
-   */
-  angular.module('BlankApp', ['ngMaterial']);
-</script>
--->
 
 </body>
 </html>
-
-<!--
-Copyright 2016 Google Inc. All Rights Reserved.
-Use of this source code is governed by an MIT-style license that can be in foundin the LICENSE file at http://material.angularjs.org/license.
--->

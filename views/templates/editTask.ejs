@@ -1,0 +1,26 @@
+<!--editTaskController-->
+<md-toolbar class="md-hue-2">
+    <div class="md-toolbar-tools">
+        <md-button class="md-icon-button" aria-label="Back" ng-click="goBack()">
+            <md-icon md-svg-icon="images/ic_keyboard_arrow_left_white_24px.svg">back</md-icon>
+        </md-button>
+        <span flex></span>
+        <h2>
+            <span>Edit Task</span>
+        </h2>
+        <span flex></span>
+        <md-button class="md-icon-button" aria-label="Delete" ng-click="deleteTask()">
+            <md-icon md-svg-icon="images/ic_delete_white_24px.svg"></md-icon>
+        </md-button>
+    </div>
+</md-toolbar>
+<md-content layout-gt-sm="row" layout-padding>
+    <div>
+        <md-input-container class="md-block">
+            <label>Taks</label>
+            <textarea ng-model="task" md-maxlength="150" rows="2"></textarea>
+        </md-input-container>
+    </div>
+</md-content>
+
+<md-button class="md-raised md-primary" ng-click="updateTask()">Update</md-button>

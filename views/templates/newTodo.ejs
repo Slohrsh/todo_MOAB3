@@ -1,0 +1,28 @@
+<!--newTodoController-->
+<md-toolbar class="md-hue-2">
+    <div class="md-toolbar-tools">
+        <md-button class="md-icon-button" aria-label="Back" ng-click="goBack()">
+            <md-icon md-svg-icon="images/ic_keyboard_arrow_left_white_24px.svg">back</md-icon>
+        </md-button>
+        <span flex></span>
+        <h2>
+            <span>New Todo</span>
+        </h2>
+        <span flex></span>
+    </div>
+</md-toolbar>
+<md-content layout-gt-sm="row" layout-padding>
+    <div>
+        <md-input-container>
+            <label>Topic</label>
+            <input ng-model="todo.topic">
+        </md-input-container>
+
+        <md-input-container class="md-block">
+            <label>Description</label>
+            <textarea ng-model="todo.description" md-maxlength="150" rows="2"></textarea>
+        </md-input-container>
+    </div>
+</md-content>
+
+<md-button class="md-raised md-primary" ng-click="newTodo()">Create</md-button>
