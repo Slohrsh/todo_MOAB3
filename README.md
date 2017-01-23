@@ -1,4 +1,5 @@
 # todo_MOAB3
+NOTE: API Documentation can be found at localhost:3000/todoAPI
 NOTE: This App won't work if you don't have the DB in background
 You must adapt this in routes/todoAPI.js
 var connection = mysql.createConnection({
