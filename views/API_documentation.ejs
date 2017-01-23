@@ -30,6 +30,35 @@
     </md-list>
     <md-divider ng-if="!$last"></md-divider>
     <md-list>
+        <h2 class="md-title">deleteSessionKey</h2>
+        <p>delete a SessionKey</p>
+        <p>Method: POST</p>
+        <p>Params: sessionkey</p>
+    </md-list>
+    <md-divider ng-if="!$last"></md-divider>
+    <md-list>
+        <h2 class="md-title">createUser</h2>
+        <p>creates a new user</p>
+        <p>Method: POST</p>
+        <p>Params:
+            <p>user</p>
+            <p>password</p>
+        </p>
+        <p>Return: 1 if success</p>
+    </md-list>
+    <md-divider ng-if="!$last"></md-divider>
+    <md-list>
+        <h2 class="md-title">userAuthentification</h2>
+        <p>compares password with username</p>
+        <p>Method: POST</p>
+        <p>Params:
+            <p>user</p>
+            <p>password</p>
+        </p>
+        <p>Return: sessionKey if success else 0 or -1 if there was an error creating a sessionKey</p>
+    </md-list>
+    <md-divider ng-if="!$last"></md-divider>
+    <md-list>
         <h2 class="md-title">allTodosFromUser</h2>
         <p>Get all Todos which are referenced to the User</p>
         <p>Method: GET</p>
