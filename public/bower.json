@@ -1,0 +1,22 @@
+{
+  "name": "Todo App",
+  "homepage": "sebastian-lohr.info",
+  "authors": [
+    "Slohrsh <sebastian.lohr@hs-weingarten.de>"
+  ],
+  "description": "Todo App for the subject MOAB3",
+  "main": "bower.json",
+  "license": "info.sebastian-lohr",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-ui-router": "^0.4.2",
+    "angular-route": "^1.6.1",
+    "mobile-angular-ui": "^1.3.4"
+  }
+}
